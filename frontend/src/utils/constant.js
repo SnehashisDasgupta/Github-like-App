@@ -9,4 +9,6 @@ export const PROGRAMMING_LANGUAGES = {
 	Go: "/go.svg",
 	HTML: "/html.svg",
 	CSS: "/css.svg",
+	EJS: "/EJS.svg",
+	C: "/c.svg"
 };

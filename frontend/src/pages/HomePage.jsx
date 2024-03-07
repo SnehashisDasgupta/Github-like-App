@@ -13,10 +13,10 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false);
   const [sortType, setSortType] = useState("recent");
 
-  const getUserProfileAndRepos = useCallback(async() => {
+  const getUserProfileAndRepos = useCallback(async(username='SnehashisDasgupta') => {
     setLoading(true);
     try {
-      const userRes = await fetch('https://api.github.com/users/SnehashisDasgupta');
+      const userRes = await fetch(`https://api.github.com/users/${username}`);
       const userProfile = await userRes.json();
       setUserProfile(userProfile);
 
@@ -26,6 +26,8 @@ const HomePage = () => {
 
       console.log(userProfile);
       console.log(repos);
+
+      return {userProfile, repos};
 
     } catch (error) {
       toast.error(error.message);
@@ -38,14 +40,28 @@ const HomePage = () => {
     getUserProfileAndRepos();
   }, [getUserProfileAndRepos]);
 
+  const onSearch = async (e, username) => {
+    e.preventDefault();
+
+    setLoading(true);
+    setRepos([]);
+    setUserProfile(null);
+
+    const { userProfile, repos } = await getUserProfileAndRepos(username);
+
+    setUserProfile(userProfile);
+    setRepos(repos);
+    setLoading(false);
+  }
+
   return (
     <div className="m-4">
-      <Search />
-      <SortRepos />
+      <Search onSearch={onSearch} />
+      {repos.length > 0 && <SortRepos />}
       <div className="flex gap-4 flex-col lg:flex-row justify-center items-start">
         {userProfile && !loading && <ProfileInfo userProfile={userProfile} />}
 
-        {repos.length > 0 && !loading && <Repos repos={repos} />}
+        {!loading && <Repos repos={repos} />}
         {loading && <Spinner />}
       </div>
     </div>
