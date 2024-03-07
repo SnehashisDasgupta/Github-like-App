@@ -52,16 +52,34 @@ const HomePage = () => {
     setUserProfile(userProfile);
     setRepos(repos);
     setLoading(false);
+  };
+
+  const onSort = (sortType) => {
+    if (sortType === "recent"){
+      // descending order of date {recent repo first}
+      repos.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)); 
+    } else if (sortType === "stars"){
+      // descending order of stars in repo {most star repo at top}
+      repos.sort((a,b) => b.stargazers_count - a.stargazers_count);
+    } else if (sortType === "forks"){
+      // descending order of count of forks {most forks repo at top}
+      repos.sort((a,b) => b.forks_count - a.forks_count);
+    }
+    setSortType(sortType);
+    setRepos([...repos]);
   }
 
   return (
     <div className="m-4">
       <Search onSearch={onSearch} />
-      {repos.length > 0 && <SortRepos />}
+
+      {repos.length > 0 && <SortRepos onSort={onSort} sortType={sortType} />}
+
       <div className="flex gap-4 flex-col lg:flex-row justify-center items-start">
         {userProfile && !loading && <ProfileInfo userProfile={userProfile} />}
 
         {!loading && <Repos repos={repos} />}
+
         {loading && <Spinner />}
       </div>
     </div>
