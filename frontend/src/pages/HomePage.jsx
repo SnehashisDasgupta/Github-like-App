@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from "react"
-import toast from "react-hot-toast"
+import { useCallback, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
-import ProfileInfo from "../components/ProfileInfo"
-import Repos from "../components/Repos"
-import Search from "../components/Search"
-import SortRepos from "../components/SortRepos"
+import ProfileInfo from "../components/ProfileInfo";
+import Repos from "../components/Repos";
+import Search from "../components/Search";
+import SortRepos from "../components/SortRepos";
 import Spinner from "../components/Spinner";
 
 const HomePage = () => {
@@ -16,12 +16,17 @@ const HomePage = () => {
   const getUserProfileAndRepos = useCallback(async(username='SnehashisDasgupta') => {
     setLoading(true);
     try {
-      const userRes = await fetch(`https://api.github.com/users/${username}`);
+      const userRes = await fetch(`https://api.github.com/users/${username}`,{
+        headers: {
+          authorization: `token ${import.meta.env.VITE_GITHUB_API_KEY}`
+        }
+      });
       const userProfile = await userRes.json();
       setUserProfile(userProfile);
 
       const repoRes = await fetch(userProfile.repos_url);
       const repos = await repoRes.json();
+      repos.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
       setRepos(repos);
 
       console.log(userProfile);
@@ -52,6 +57,7 @@ const HomePage = () => {
     setUserProfile(userProfile);
     setRepos(repos);
     setLoading(false);
+    setSortType('recent');
   };
 
   const onSort = (sortType) => {
@@ -86,4 +92,4 @@ const HomePage = () => {
   )
 }
 
-export default HomePage
+export default HomePage;
