@@ -7,6 +7,7 @@ export const explorePopularRepos = async (req, res) => {
                 authorization: `token ${process.env.GITHUB_API_KEY}`,
             }
         });
+        
         const data = await exploreRes.json();
         res.status(200).json({repos: data.items});
 
