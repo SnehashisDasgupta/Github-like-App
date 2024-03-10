@@ -6,6 +6,6 @@ export default async function connectMongoDB(){
         console.log("MongoDB connected");
         
     } catch (error) {
-        console.log("Error connecting to MongoDB", error.message);
+        console.log("Error connecting to MongoDB: ", error.message);
     }
 }

@@ -3,3 +3,6 @@ npm i react-router-dom react-hot-toast react-icons
 
 # BACKEND
 npm i express cors mongoose dotenv
+
+npm install passport-github2 passport
+npm i express-session      
